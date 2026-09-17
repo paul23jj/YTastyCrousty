@@ -1,6 +1,26 @@
+# Variables d'environnement / secrets
 .env
-.DS_Store
-.venv
+
+# Environnement virtuel Python
+.venv/
+venv/
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+
+# Caches d'outils Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE
 .idea/
+
+# Fichiers système macOS
+.DS_Store
 __MACOSX/
-**/__MACOSX/
+**/__MACOSX__/
