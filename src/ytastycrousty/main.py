@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .db.database import engine, Base
+from .router import users
 
 allow_origins = ["http://localhost:5173"]
 
@@ -27,3 +28,5 @@ app.add_middleware(
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+app.include_router(users.router, prefix="/users", tags=["user"])
