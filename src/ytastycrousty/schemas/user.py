@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class UserBase(BaseModel):
-    identifiants: str
+    identifiant: str
     first_name: str
     last_name: str
 
@@ -13,5 +13,5 @@ class UserOut(UserBase):
     role: str
     status: str
 
-class Config:
-    from_attribute= True
+    class Config:
+        from_attributes = True
