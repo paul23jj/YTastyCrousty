@@ -1,9 +1,32 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
-import os 
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from .db.database import engine, Base
+from .router import users
 
+allow_origins = ["http://localhost:5173"]
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+    await engine.dispose()
+
+app = FastAPI(lifespan= lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allow_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/health")
-def health():
-    return {"status" : "ok"}
+async def health():
+    return {"status": "ok"}
+
+app.include_router(users.router, prefix="/users", tags=["user"])
