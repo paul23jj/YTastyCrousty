@@ -8,10 +8,12 @@ from .router import users
 
 allow_origins = ["http://localhost:5173"]
 
+#lifespan sert à éxécuter des commandes au lancement de l'application
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        #appel création de l'admin
     yield
     await engine.dispose()
 
