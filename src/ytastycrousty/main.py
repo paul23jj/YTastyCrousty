@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .admin import create_admin
 from .db.config import settings
 from .db.database import Base, SessionLocal, engine
-from .models.restaurant import Restaurant  # noqa: F401
+from .models.restaurant import Restaurant
 from .router import users
 
 allow_origins = ["http://localhost:5173"]

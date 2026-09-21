@@ -18,7 +18,7 @@ CREATE TABLE
         first_name VARCHAR(50) NOT NULL,
         last_name VARCHAR(50) NOT NULL,
         restaurant_id INTEGER,
-        CONSTRAINT fk_user_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants (restaurant_id)
+        CONSTRAINT fk_user_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants (id)
     );
 
 CREATE TABLE
