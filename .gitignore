@@ -4,6 +4,7 @@
 # Environnement virtuel Python
 .venv/
 venv/
+.uv-cache/
 
 # Cache Python
 __pycache__/

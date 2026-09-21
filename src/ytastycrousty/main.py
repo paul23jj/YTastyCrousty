@@ -3,21 +3,23 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .db.database import engine, Base
+from .admin import create_admin
+from .db.config import settings
+from .db.database import Base, SessionLocal, engine
+from .models.restaurant import Restaurant  # noqa: F401
 from .router import users
 
 allow_origins = ["http://localhost:5173"]
 
-#lifespan sert à éxécuter des commandes au lancement de l'application
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-        #appel création de l'admin
+    Base.metadata.create_all(bind=engine)
+    with SessionLocal() as db:
+        create_admin(db, settings.admin_password)
     yield
-    await engine.dispose()
+    engine.dispose()
 
-app = FastAPI(lifespan= lifespan)
+app = FastAPI(title="Ytasty Crousty API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

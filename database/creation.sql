@@ -1,6 +1,6 @@
 CREATE TABLE
     restaurants (
-        restaurant_id VARCHAR(50) PRIMARY KEY,
+        id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         name VARCHAR(50) NOT NULL,
         city VARCHAR(50) NOT NULL,
         address VARCHAR(100) NOT NULL,
@@ -11,13 +11,14 @@ CREATE TABLE
 
 CREATE TABLE
     users (
-        user_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-        identifiant VARCHAR(50) NOT NULL UNIQUE,
+        id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        username VARCHAR(12) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(50) NOT NULL,
-        status VARCHAR(50) NOT NULL,
         first_name VARCHAR(50) NOT NULL,
-        last_name VARCHAR(50) NOT NULL
+        last_name VARCHAR(50) NOT NULL,
+        restaurant_id INTEGER,
+        CONSTRAINT fk_user_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants (restaurant_id)
     );
 
 CREATE TABLE
@@ -30,8 +31,8 @@ CREATE TABLE
         price NUMERIC(10, 2) NOT NULL,
         is_available BOOLEAN NOT NULL,
         ingredients VARCHAR(255) NOT NULL,
-        restaurant_id VARCHAR(50) NOT NULL,
-        CONSTRAINT fk_product_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants (restaurant_id)
+        restaurant_id INTEGER NOT NULL,
+        CONSTRAINT fk_product_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants (id)
     );
 
 CREATE TABLE
@@ -42,10 +43,10 @@ CREATE TABLE
         total_price NUMERIC(10, 2) NOT NULL,
         status VARCHAR(50) NOT NULL,
         pickup_mode VARCHAR(50) NOT NULL,
-        restaurant_id VARCHAR(50) NOT NULL,
+        restaurant_id INTEGER NOT NULL,
         user_id INTEGER NOT NULL,
-        CONSTRAINT fk_order_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants (restaurant_id),
-        CONSTRAINT fk_order_user FOREIGN KEY (user_id) REFERENCES users (user_id)
+        CONSTRAINT fk_order_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants (id),
+        CONSTRAINT fk_order_user FOREIGN KEY (user_id) REFERENCES users (id)
     );
 
 CREATE TABLE

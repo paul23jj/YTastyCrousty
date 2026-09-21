@@ -1,20 +1,21 @@
-from ..security import hash_password
+from sqlalchemy.orm import Session
+
 from ..models.user import User
 from ..schemas.user import UserCreate
-from sqlalchemy.ext.asyncio import AsyncSession
+from ..security import hash_password
 
 
-async def create_user(db: AsyncSession, user: UserCreate):
+def create_user(db: Session, user: UserCreate) -> User:
     hashed_password = hash_password(user.password)
     db_user = User(
-        identifiant = user.identifiant,
-        first_name = user.first_name,
-        last_name = user.last_name,
-        password = hashed_password,
-        role = "client",
-        status = "active",
+        username=user.username,
+        first_name=user.first_name,
+        last_name=user.last_name,
+        password=hashed_password,
+        role=user.role,
+        restaurant_id=user.restaurant_id,
     )
     db.add(db_user)
-    await db.commit()
-    await db.refresh(db_user)
+    db.commit()
+    db.refresh(db_user)
     return db_user

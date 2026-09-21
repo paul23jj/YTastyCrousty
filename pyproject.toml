@@ -6,10 +6,11 @@ readme = "README.md"
 authors = [
     { name = "Harold", email = "harold.francois@ynov.com" }
 ]
-requires-python = ">=3.14"
+requires-python = ">=3.11"
 dependencies = [
-    "bcrypt>=5.0.0",
     "fastapi>=0.141.1",
+    "passlib>=1.7.4",
+    "psycopg[binary]>=3.3.6",
     "pydantic>=2.13.5",
     "pydantic-settings>=2.15.0",
     "pyjwt>=2.13.0",
