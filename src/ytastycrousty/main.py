@@ -8,6 +8,7 @@ from .db.config import settings
 from .db.database import Base, SessionLocal, engine
 from .models.restaurant import Restaurant
 from .router import users
+from .router import auth
 
 allow_origins = ["http://localhost:5173"]
 
@@ -34,3 +35,5 @@ async def health():
     return {"status": "ok"}
 
 app.include_router(users.router, prefix="/users", tags=["user"])
+
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
