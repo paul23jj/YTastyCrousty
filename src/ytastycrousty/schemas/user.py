@@ -17,7 +17,7 @@ class UserOut(UserBase):
         from_attributes = True
 
 class LoginRequest(BaseModel):
-    identifiants: str
+    identifiant: str
     password: str
 
 class TokenResponse(BaseModel):
