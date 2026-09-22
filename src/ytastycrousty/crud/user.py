@@ -2,7 +2,11 @@ from ..security import hash_password
 from ..models.user import User
 from ..schemas.user import UserCreate
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
+async def get_user_by_identifiant(db: AsyncSession, identifiant: str):
+    result = await db.execute(select(User).where(User.identifiant == identifiant))
+    return result.scalar_one_or_none()
 
 async def create_user(db: AsyncSession, user: UserCreate):
     hashed_password = hash_password(user.password)
