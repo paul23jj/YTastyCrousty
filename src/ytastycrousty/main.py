@@ -29,4 +29,4 @@ app.add_middleware(
 async def health():
     return {"status": "ok"}
 
-app.include_router(users.router, prefix="/users", tags=["user"])
+app.include_router(users.router, prefix="/users", tags=["users"])
