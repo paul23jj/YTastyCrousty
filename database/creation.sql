@@ -22,15 +22,15 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    product (
-        product_id VARCHAR(50) PRIMARY KEY,
+    products (
+        id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         name VARCHAR(50) NOT NULL,
         image VARCHAR(255),
         description VARCHAR(500) NOT NULL,
         category VARCHAR(50) NOT NULL,
-        price NUMERIC(10, 2) NOT NULL,
-        is_available BOOLEAN NOT NULL,
-        ingredients VARCHAR(255) NOT NULL,
+        price NUMERIC(10, 2) NOT NULL CHECK (price >= 0),
+        is_available BOOLEAN NOT NULL DEFAULT TRUE,
+        ingredients JSON NOT NULL,
         restaurant_id INTEGER NOT NULL,
         CONSTRAINT fk_product_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants (id)
     );
@@ -54,7 +54,7 @@ CREATE TABLE
         order_items_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         quantity INTEGER NOT NULL,
         id INTEGER NOT NULL,
-        product_id VARCHAR(50) NOT NULL,
+        product_id INTEGER NOT NULL,
         CONSTRAINT fk_order_item_order FOREIGN KEY (id) REFERENCES orders (id),
-        CONSTRAINT fk_order_item_product FOREIGN KEY (product_id) REFERENCES product (product_id)
+        CONSTRAINT fk_order_item_product FOREIGN KEY (product_id) REFERENCES products (id)
     );
