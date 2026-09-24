@@ -10,6 +10,7 @@ from .models.restaurant import Restaurant
 from .router import users
 from .router import auth
 from .router import products
+from .router import restaurants
 
 allow_origins = ["http://localhost:5173"]
 
@@ -39,3 +40,4 @@ app.include_router(users.router, prefix="/users", tags=["user"])
 
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(products.router, prefix="/products", tags=["products"])
+app.include_router(restaurants.router, prefix="/restaurants", tags=["restaurants"])
