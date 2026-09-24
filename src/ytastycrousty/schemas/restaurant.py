@@ -7,7 +7,7 @@ class RestaurantOut(BaseModel):
     name: str
     city: str
     address: str
-    is_open: str
+    is_open: bool
     opening_hours: str
     contact: str
 

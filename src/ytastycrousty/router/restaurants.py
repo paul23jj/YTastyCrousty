@@ -25,7 +25,7 @@ def update_restaurant(restaurant_id: int, data: RestaurantUpdate, db: Session = 
         raise HTTPException(status_code=404, detail="restaurant introuvable")
     return restaurant
 
-@router.patch("/{restaurant_id}}/availability", response_model=RestaurantOut)
+@router.patch("/{restaurant_id}/availability", response_model=RestaurantOut)
 def update_availability(restaurant_id: int, data: AvailabilityUpdate, db: Session = Depends(get_db)):
     restaurant = crud_restaurant.update_availability(db, restaurant_id, data)
     if restaurant is None:
