@@ -23,6 +23,8 @@ def enregistrer_modifications(db: Session) -> None:
 
 
 def verifier_acces_restaurant(user: User, restaurant_id: int) -> None:
+    if user.role not in {"admin", "direction", "staff"}:
+        raise HTTPException(status_code=403, detail="Rôle non autorisé")
     if user.role == "staff" and user.restaurant_id != restaurant_id:
         raise HTTPException(
             status_code=403,
@@ -88,6 +90,8 @@ def creer_commande(db: Session, data: OrderCreate) -> Order:
 
         total_price += product.price * item_data.quantity
 
+    if total_price > Decimal("99999999.99"):
+        raise HTTPException(status_code=400, detail="Le montant de la commande est trop élevé")
     order.total_price = total_price
 
     db.add(order)
@@ -109,6 +113,8 @@ def lister_commandes_restaurant(
     query = db.query(Order).filter(Order.restaurant_id == restaurant_id)
 
     if status is not None:
+        if status not in {"pending", "validated", "preparing", "ready", "collected", "cancelled"}:
+            raise HTTPException(status_code=422, detail="Statut de commande invalide")
         query = query.filter(Order.status == status)
 
     return query.all()
