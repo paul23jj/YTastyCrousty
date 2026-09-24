@@ -7,10 +7,12 @@ from .admin import create_admin
 from .db.config import settings
 from .db.database import Base, SessionLocal, engine
 from .models.restaurant import Restaurant
+from .models.order import Order, OrderItem
 from .router import users
 from .router import auth
 from .router import products
 from .router import restaurants
+from .router import orders
 
 allow_origins = ["http://localhost:5173"]
 
@@ -41,3 +43,4 @@ app.include_router(users.router, prefix="/users", tags=["user"])
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(products.router, prefix="/products", tags=["products"])
 app.include_router(restaurants.router, prefix="/restaurants", tags=["restaurants"])
+app.include_router(orders.router, prefix="/orders", tags=["orders"])
