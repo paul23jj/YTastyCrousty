@@ -1,8 +1,6 @@
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from .admin import create_admin
 from .db.config import settings
 from .db.database import Base, SessionLocal, engine
@@ -11,8 +9,6 @@ from .router import users
 from .router import auth
 from .router import products
 from .router import restaurants
-
-allow_origins = ["http://localhost:5173"]
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -24,16 +20,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Ytasty Crousty API", lifespan=lifespan)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=allow_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 @app.get("/health")
-async def health():
+def health():
     return {"status": "ok"}
 
 app.include_router(users.router, prefix="/users", tags=["user"])
