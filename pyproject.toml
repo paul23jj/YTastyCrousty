@@ -1,7 +1,7 @@
 [project]
 name = "ytastycrousty"
 version = "0.1.0"
-description = "Add your description here"
+description = "API de gestion des restaurants Ytasty Crousty"
 readme = "README.md"
 authors = [
     { name = "Harold", email = "harold.francois@ynov.com" }
@@ -19,9 +19,6 @@ dependencies = [
     "sqlalchemy>=2.0.54",
     "uvicorn>=0.52.4",
 ]
-
-[project.scripts]
-ytastycrousty = "ytastycrousty:main"
 
 [build-system]
 requires = ["uv_build>=0.12.10,<0.13.0"]
