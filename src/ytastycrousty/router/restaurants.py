@@ -9,11 +9,11 @@ router = APIRouter()
 
 @router.get("/", response_model=list[RestaurantOut])
 def list_restaurants(db: Session = Depends(get_db)):
-    return crud_restaurant.get_restaurant(db)
+    return crud_restaurant.get_restaurants(db)
 
 @router.get("/{restaurant_id}", response_model=RestaurantOut)
-def get_restaurant(restaurant_id: int, data: RestaurantUpdate, db: Session = Depends(get_db)):
-    restaurant = crud_restaurant.update_restaurant(db, restaurant_id, data)
+def get_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
+    restaurant = crud_restaurant.get_restaurant(db, restaurant_id)
     if restaurant is None:
         raise HTTPException(status_code=404, detail="restaurant introuvable")
     return restaurant
