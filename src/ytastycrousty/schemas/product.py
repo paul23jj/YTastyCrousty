@@ -43,7 +43,7 @@ class ProduitReponse(BaseModel):
     image: str | None
     description: str
     category: str
-    price: Decimal
+    price: float
     is_available: bool
     restaurant_id: int
     ingredients: list[str]

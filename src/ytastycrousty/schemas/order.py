@@ -1,12 +1,11 @@
 from datetime import datetime
-from decimal import Decimal
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 class CustomerCreate(BaseModel):
     name: str = Field(min_length=1, max_length=100)
-    email: EmailStr
+    email: str = Field(pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
     
 class OrderItemCreate(BaseModel):
     product_id: int = Field(gt=0)
@@ -33,11 +32,11 @@ class OrderItemOut(BaseModel):
     
     product_id: int
     quantity: int
-    unit_price: Decimal
+    unit_price: float
     
 class CustomerOut(BaseModel):
     name: str
-    email: EmailStr
+    email: str
     
 class OrderOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -46,7 +45,7 @@ class OrderOut(BaseModel):
     restaurant_id: int
     created_at: datetime
     items: list[OrderItemOut]
-    total_price: Decimal
+    total_price: float
     status: str
     pickup_mode: str
     customer: CustomerOut
