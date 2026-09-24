@@ -10,7 +10,7 @@ class CustomerCreate(BaseModel):
     
 class OrderItemCreate(BaseModel):
     product_id: int = Field(gt=0)
-    quantity: int = Field(gt=0)
+    quantity: int = Field(gt=0, le=2147483647, strict=True)
     
 class OrderCreate(BaseModel):
     restaurant_id: int = Field(gt=0)

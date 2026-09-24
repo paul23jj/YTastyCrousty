@@ -9,6 +9,20 @@ from ..models.user import User
 from ..schemas.product import CreationProduit, ModificationProduit
 
 
+def lister_produits(db: Session, category=None, q=None, restaurant_id=None, is_available=None):
+    produits = db.query(Product)
+    if category is not None:
+        produits = produits.filter(Product.category == category)
+    if q is not None:
+        recherche = "%" + q + "%"
+        produits = produits.filter(Product.name.ilike(recherche) | Product.description.ilike(recherche))
+    if restaurant_id is not None:
+        produits = produits.filter(Product.restaurant_id == restaurant_id)
+    if is_available is not None:
+        produits = produits.filter(Product.is_available == is_available)
+    return produits.order_by(Product.id).all()
+
+
 def recuperer_produit(db: Session, product_id: int) -> Product:
     product = db.get(Product, product_id)
     if product is None:

@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from ..models.restaurant import Restaurant
@@ -14,8 +15,19 @@ def update_restaurant(db: Session, restaurant_id: int, data: RestaurantUpdate):
     if restaurant is None:
         return None
     update_data = data.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
-        setattr(restaurant, field, value)
+    for nom, valeur in update_data.items():
+        if valeur is None:
+            raise HTTPException(status_code=422, detail=f"Le champ {nom} ne peut pas être null")
+    if "name" in update_data:
+        restaurant.name = update_data["name"]
+    if "city" in update_data:
+        restaurant.city = update_data["city"]
+    if "address" in update_data:
+        restaurant.address = update_data["address"]
+    if "opening_hours" in update_data:
+        restaurant.opening_hours = update_data["opening_hours"]
+    if "contact" in update_data:
+        restaurant.contact = update_data["contact"]
     db.commit()
     db.refresh(restaurant)
     return restaurant

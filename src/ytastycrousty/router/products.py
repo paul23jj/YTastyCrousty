@@ -36,6 +36,22 @@ def verifier_champs_null(champs: dict):
             )
 
 
+@router.get("", response_model=list[ProduitReponse])
+def lister_produits(
+    category: str | None = None,
+    q: str | None = None,
+    restaurant_id: int | None = None,
+    is_available: bool | None = None,
+    db: Session = Depends(get_db),
+):
+    return crud_product.lister_produits(db, category, q, restaurant_id, is_available)
+
+
+@router.get("/{product_id}", response_model=ProduitReponse)
+def recuperer_produit(product_id: int, db: Session = Depends(get_db)):
+    return crud_product.recuperer_produit(db, product_id)
+
+
 @router.post("", response_model=ProduitReponse, status_code=201)
 def creer_produit(
     data: CreationProduit,

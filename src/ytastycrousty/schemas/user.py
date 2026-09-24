@@ -4,12 +4,12 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class UserCreate(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: str = Field(min_length=1)
+    last_name: str = Field(min_length=1)
     username: str = Field(min_length=8, max_length=12, pattern=r"^[a-zA-Z0-9]+$")
     password: str = Field(min_length=12, max_length=64)
     role: Literal["admin", "staff", "direction"]
-    restaurant_id: int | None = None
+    restaurant_id: int | None = Field(default=None, gt=0)
 
     @field_validator("password")
     @classmethod
@@ -18,7 +18,11 @@ class UserCreate(BaseModel):
             raise ValueError("Le mot de passe doit contenir au moins un chiffre")
         if not any(character.isupper() for character in password):
             raise ValueError("Le mot de passe doit contenir au moins une majuscule")
-        if password.isalnum():
+        caractere_special = False
+        for caractere in password:
+            if not caractere.isalnum() and not caractere.isspace():
+                caractere_special = True
+        if not caractere_special:
             raise ValueError("Le mot de passe doit contenir au moins un caractère spécial")
         return password
 
