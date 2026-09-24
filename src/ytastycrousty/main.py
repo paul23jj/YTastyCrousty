@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from .admin import create_admin
+from .initialisation import initialiser_restaurants
 from .db.config import settings
 from .db.database import Base, SessionLocal, engine
 from .models.restaurant import Restaurant
@@ -17,6 +18,7 @@ async def lifespan(app: FastAPI):
     #exécuté au démarrage de l'API
     Base.metadata.create_all(bind=engine)
     with SessionLocal() as db:
+        initialiser_restaurants(db)
         create_admin(db, settings.admin_password)
     yield
     #exécuté à l'arrêt de l'API
