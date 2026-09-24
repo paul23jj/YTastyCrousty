@@ -4,12 +4,14 @@
 # Environnement virtuel Python
 .venv/
 venv/
+.uv-cache/
 
 # Cache Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.db
 
 
 # Caches d'outils Python
