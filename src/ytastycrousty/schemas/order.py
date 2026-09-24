@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 class CustomerCreate(BaseModel):
-    name: str = Field(min_lentgth=1, max_length=100)
+    name: str = Field(min_length=1, max_length=100)
     email: EmailStr
     
 class OrderItemCreate(BaseModel):
