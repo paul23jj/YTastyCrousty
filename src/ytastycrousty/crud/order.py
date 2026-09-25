@@ -47,7 +47,9 @@ def recuperer_commande_par_numero(db: Session, order_number: str) -> Order:
 
 
 def creer_commande(db: Session, data: OrderCreate) -> Order:
-    restaurant = recuperer_restaurant(db, data.restaurant_id)
+    restaurant = db.get(Restaurant, data.restaurant_id)
+    if restaurant is None:
+        raise HTTPException(status_code=400, detail="Restaurant introuvable")
 
     if not restaurant.is_open:
         raise HTTPException(
@@ -67,7 +69,7 @@ def creer_commande(db: Session, data: OrderCreate) -> Order:
         product = db.get(Product, item_data.product_id)
 
         if product is None:
-            raise HTTPException(status_code=404, detail="Produit introuvable")
+            raise HTTPException(status_code=400, detail="Produit introuvable")
 
         if product.restaurant_id != data.restaurant_id:
             raise HTTPException(
@@ -117,7 +119,7 @@ def lister_commandes_restaurant(
             raise HTTPException(status_code=422, detail="Statut de commande invalide")
         query = query.filter(Order.status == status)
 
-    return query.all()
+    return query.order_by(Order.created_at.desc(), Order.id.desc()).all()
 
 
 def modifier_statut_commande(
@@ -126,9 +128,13 @@ def modifier_statut_commande(
     data: OrderStatusUpdate,
     user: User,
 ) -> Order:
+    if user.role not in {"admin", "staff"}:
+        raise HTTPException(status_code=403, detail="Modification des commandes interdite")
     order = recuperer_commande_par_numero(db, order_number)
     verifier_acces_restaurant(user, order.restaurant_id)
 
+    if order.status in {"collected", "cancelled"} and data.status != order.status:
+        raise HTTPException(status_code=400, detail="Une commande terminée ne peut plus changer de statut")
     order.status = data.status
 
     enregistrer_modifications(db)
@@ -138,10 +144,12 @@ def modifier_statut_commande(
 
 
 def annuler_commande(db: Session, order_number: str, user: User) -> Order:
+    if user.role not in {"admin", "staff"}:
+        raise HTTPException(status_code=403, detail="Modification des commandes interdite")
     order = recuperer_commande_par_numero(db, order_number)
     verifier_acces_restaurant(user, order.restaurant_id)
 
-    if order.status in {"collected", "cancelled"}:
+    if order.status == "collected":
         raise HTTPException(
             status_code=400,
             detail="Cette commande ne peut plus être annulée",

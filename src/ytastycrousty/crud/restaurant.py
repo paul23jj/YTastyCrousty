@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from ..models.restaurant import Restaurant
-from ..schemas.restaurant import RestaurantUpdate, AvailabilityUpdate
+from ..schemas.restaurant import RestaurantUpdate, AvailabilityUpdate, CreationRestaurant
 
 def get_restaurants(db: Session):
     return db.query(Restaurant).all()
@@ -37,6 +37,23 @@ def update_availability(db: Session, restaurant_id: int, data: AvailabilityUpdat
     if restaurant is None:
         return None
     restaurant.is_open = data.is_open
+    db.commit()
+    db.refresh(restaurant)
+    return restaurant
+
+
+def creer_restaurant(db: Session, data: CreationRestaurant):
+    restaurant = db.query(Restaurant).filter(Restaurant.name == data.name).first()
+    if restaurant is not None:
+        raise HTTPException(status_code=400, detail="Ce restaurant existe déjà")
+    restaurant = Restaurant()
+    restaurant.name = data.name
+    restaurant.city = data.city
+    restaurant.address = data.address
+    restaurant.is_open = data.is_open
+    restaurant.opening_hours = data.opening_hours
+    restaurant.contact = data.contact
+    db.add(restaurant)
     db.commit()
     db.refresh(restaurant)
     return restaurant

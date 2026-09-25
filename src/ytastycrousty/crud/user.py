@@ -8,6 +8,10 @@ from ..schemas.user import UserCreate
 from ..security import hash_password
 
 
+def lister_utilisateurs(db: Session):
+    return db.query(User).order_by(User.id).all()
+
+
 def create_user(db: Session, user: UserCreate) -> User:
     utilisateur = db.query(User).filter(User.username == user.username).first()
     if utilisateur is not None:
@@ -16,7 +20,7 @@ def create_user(db: Session, user: UserCreate) -> User:
         raise HTTPException(status_code=400, detail="Un membre du staff doit avoir un restaurant")
     if user.restaurant_id is not None:
         if db.get(Restaurant, user.restaurant_id) is None:
-            raise HTTPException(status_code=404, detail="Restaurant introuvable")
+            raise HTTPException(status_code=400, detail="Restaurant introuvable")
     hashed_password = hash_password(user.password)
     db_user = User(
         username=user.username,

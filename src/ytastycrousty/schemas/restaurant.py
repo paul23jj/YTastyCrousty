@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 class RestaurantOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -21,3 +21,11 @@ class RestaurantUpdate(BaseModel):
 
 class AvailabilityUpdate(BaseModel):
     is_open: bool
+
+class CreationRestaurant(BaseModel):
+    name: str = Field(min_length=1)
+    city: str = Field(min_length=1)
+    address: str
+    is_open: bool = True
+    opening_hours: str
+    contact: str

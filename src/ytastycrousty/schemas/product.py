@@ -10,7 +10,7 @@ class CreationProduit(BaseModel):
     image: HttpUrl | None = Field(default=None, max_length=255)
     description: str = Field(max_length=500)
     category: str = Field(min_length=1, max_length=50)
-    price: Decimal = Field(ge=0, max_digits=10, decimal_places=2)
+    price: Decimal = Field(gt=0, max_digits=10, decimal_places=2)
     is_available: bool = True
     restaurant_id: int = Field(gt=0)
     ingredients: list[str] = Field(default_factory=list)
@@ -23,7 +23,7 @@ class ModificationProduit(BaseModel):
     image: HttpUrl | None = Field(default=None, max_length=255)
     description: str | None = Field(default=None, max_length=500)
     category: str | None = Field(default=None, min_length=1, max_length=50)
-    price: Decimal | None = Field(default=None, ge=0, max_digits=10, decimal_places=2)
+    price: Decimal | None = Field(default=None, gt=0, max_digits=10, decimal_places=2)
     is_available: bool | None = None
     restaurant_id: int | None = Field(default=None, gt=0)
     ingredients: list[str] | None = None

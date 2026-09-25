@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..db.database import get_db
-from ..schemas.restaurant import RestaurantOut, RestaurantUpdate, AvailabilityUpdate
+from ..schemas.restaurant import RestaurantOut, RestaurantUpdate, AvailabilityUpdate, CreationRestaurant
 from ..crud import restaurant as crud_restaurant
 from ..crud import order as crud_order
 from ..models.user import User
@@ -39,3 +39,8 @@ def update_availability(restaurant_id: int, data: AvailabilityUpdate, db: Sessio
     if restaurant is None:
         raise HTTPException(status_code=404, detail="restaurant introuvable")
     return restaurant
+
+
+@router.post("", response_model=RestaurantOut, status_code=201, dependencies=[Depends(verifier_admin)])
+def creer_restaurant(data: CreationRestaurant, db: Session = Depends(get_db)):
+    return crud_restaurant.creer_restaurant(db, data)

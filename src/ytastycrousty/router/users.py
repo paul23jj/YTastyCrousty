@@ -10,6 +10,11 @@ from ..schemas.user import UserCreate, UserOut
 
 router = APIRouter()
 
+@router.get("", response_model=list[UserOut], dependencies=[Depends(verifier_admin)])
+def lister_utilisateurs(db: Session = Depends(get_db)):
+    return crud_user.lister_utilisateurs(db)
+
+
 @router.post("", response_model=UserOut, status_code=201, dependencies=[Depends(verifier_admin)])
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     return crud_user.create_user(db, user)

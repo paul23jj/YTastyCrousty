@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from sqlalchemy import String, cast
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -15,7 +16,7 @@ def lister_produits(db: Session, category=None, q=None, restaurant_id=None, is_a
         produits = produits.filter(Product.category == category)
     if q is not None:
         recherche = "%" + q + "%"
-        produits = produits.filter(Product.name.ilike(recherche) | Product.description.ilike(recherche))
+        produits = produits.filter(Product.name.ilike(recherche) | Product.description.ilike(recherche) | cast(Product.ingredients, String).ilike(recherche))
     if restaurant_id is not None:
         produits = produits.filter(Product.restaurant_id == restaurant_id)
     if is_available is not None:
@@ -32,7 +33,7 @@ def recuperer_produit(db: Session, product_id: int) -> Product:
 
 def verifier_restaurant(db: Session, restaurant_id: int) -> None:
     if db.get(Restaurant, restaurant_id) is None:
-        raise HTTPException(status_code=404, detail="Restaurant introuvable")
+        raise HTTPException(status_code=400, detail="Restaurant introuvable")
 
 
 def enregistrer_modifications(db: Session) -> None:
